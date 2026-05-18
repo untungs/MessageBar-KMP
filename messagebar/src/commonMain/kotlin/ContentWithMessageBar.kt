@@ -41,6 +41,7 @@ enum class MessageBarPosition {
  * @param position - Configure where you want to position the Message Bar.
  * [MessageBarPosition.TOP] and [MessageBarPosition.BOTTOM] as available.
  * @param visibilityDuration - How long the Message Bar should stay visible. A default value is 3 seconds.
+ * @param visibilityOffset - Add a configurable offset to the Message Bar.
  * @param showCopyButton - Whether to show a copy button, on a message bar of an Error type.
  * @param showCopyButtonOnSuccess - Whether to show a copy button, on a message bar of a Success type.
  * @param copyButtonFontSize - The font size of the of the copy button text.
@@ -76,6 +77,7 @@ fun ContentWithMessageBar(
     messageBarState: MessageBarState,
     position: MessageBarPosition = MessageBarPosition.TOP,
     visibilityDuration: Long = 3000L,
+    visibilityOffset: Dp = 0.dp,
     showCopyButton: Boolean = true,
     showCopyButtonOnSuccess: Boolean = false,
     copyButtonFontSize: TextUnit = MaterialTheme.typography.labelMedium.fontSize,
@@ -126,6 +128,7 @@ fun ContentWithMessageBar(
             messageBarState = messageBarState,
             position = position,
             visibilityDuration = visibilityDuration,
+            visibilityOffset = visibilityOffset,
             successIcon = successIcon,
             errorIcon = errorIcon,
             iconSize = iconSize,
@@ -160,6 +163,7 @@ internal fun MessageBarComponent(
     messageBarState: MessageBarState,
     position: MessageBarPosition,
     visibilityDuration: Long,
+    visibilityOffset: Dp,
     successIcon: ImageVector,
     errorIcon: ImageVector,
     iconSize: Dp,
@@ -208,7 +212,12 @@ internal fun MessageBarComponent(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                top = if (position == MessageBarPosition.TOP) visibilityOffset else 0.dp,
+                bottom = if (position == MessageBarPosition.BOTTOM) visibilityOffset else 0.dp
+            ),
         verticalArrangement = if (position == MessageBarPosition.TOP)
             Arrangement.Top else Arrangement.Bottom
     ) {

@@ -145,6 +145,8 @@ mavenPublishing {
     // Configure publishing to Maven Central
     publishToMavenCentral()
 
-    // Enable GPG signing for all publications
-    signAllPublications()
+    // Enable GPG signing for all publications if keys are present
+    if (project.hasProperty("signing.keyId")) {
+        signAllPublications()
+    }
 }
